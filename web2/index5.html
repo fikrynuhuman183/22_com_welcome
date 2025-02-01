@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squid Game Challenge</title>
+    <style>
+        body {
+            background: url('squidgame.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+        .container {
+            margin-top: 5%;
+            position: relative;
+        }
+        .question-box {
+            border: 3px solid red;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .hint {
+            color: yellow;
+            font-style: italic;
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            margin-top: 20px;
+        }
+        input {
+            background: #222;
+            color: white;
+            border: 2px solid red;
+            padding: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: red;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+        button:hover {
+            background: darkred;
+        }
+        h1 {
+            color: red;
+            font-size: 36px;
+            text-transform: uppercase;
+        }
+        .bot-guide {
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            width: 120px;
+            animation: bot-move 2s infinite alternate;
+        }
+        .squid-symbol-btn {
+            background: transparent;
+            border: 3px solid red;
+            padding: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .circle-btn {
+            border-radius: 50%;
+        }
+        .triangle-btn {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid red;
+        }
+        .square-btn {
+            width: 40px;
+            height: 40px;
+            background: red;
+        }
+        @keyframes bot-move {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+        @keyframes text-reveal {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Squid Game Challenge</h1>
+        <p class="subtitle">Survive the Game by Answering Correctly!</p>
+        <img src="doll.png" class="bot-guide" alt="Squid Game Guide Bot">
+        <div class="question-box">
+            <p id="question"></p>
+            <p id="timer"></p>
+            <input type="text" id="answer" placeholder=">">
+            <button onclick="checkAnswer()">Submit</button>
+            <button onclick="showHint()">Hint</button>
+            <p id="hint" class="hint"></p>
+            <div id="nextStep" class="hint" style="display: none;">
+                <p>Your answer is correct! Would you like to go to the next step?</p>
+                <button class="squid-symbol-btn circle-btn" onclick="nextStep()">Circle</button>
+                <button class="squid-symbol-btn triangle-btn" onclick="nextStep()">Triangle</button>
+                <button class="squid-symbol-btn square-btn" onclick="nextStep()">Square</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let questions = [
+            { question: "What is the number of the protagonist in Squid Game?", answer: "456", hint: "Hint: The last contestant!" },
+            { question: "What shape represents the workers in Squid Game?", answer: "Circle", hint: "Hint: The simplest geometric figure!" },
+            { question: "What color do the players wear?", answer: "Green", hint: "Hint: The color of life and survival!" }
+        ];
+        let currentQuestionIndex = 0;
+        let timeLeft = 15;
+        let timerInterval;
+
+        function startQuiz() {
+            let questionElement = document.getElementById('question');
+            questionElement.innerText = "";
+            let text = questions[currentQuestionIndex].question;
+            let i = 0;
+            function typeEffect() {
+                if (i < text.length) {
+                    questionElement.innerText += text.charAt(i);
+                    i++;
+                    setTimeout(typeEffect, 50);
+                }
+            }
+            typeEffect();
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = 15;
+            document.getElementById('timer').innerText = `Time left: ${timeLeft}s`;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').innerText = `Time left: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time's up! Try again.");
+                    startQuiz();
+                }
+            }, 1000);
+        }
+
+        function checkAnswer() {
+            let userAnswer = document.getElementById('answer').value.trim();
+            let hintElement = document.getElementById('hint');
+            let nextStepElement = document.getElementById('nextStep');
+            
+            if (userAnswer.toLowerCase() === questions[currentQuestionIndex].answer.toLowerCase()) {
+                let audio = new Audio('success.mp3');
+                audio.play();
+                alert("Correct! Moving to the next challenge.");
+                nextStepElement.style.display = "block";  // Show the next step buttons
+                document.getElementById('answer').value = "";
+                hintElement.style.opacity = "0";
+                hintElement.style.display = "none";
+            } else {
+                let audio = new Audio('error.mp3');
+                audio.play();
+                showHint();
+            }
+        }
+
+        function showHint() {
+            let hintElement = document.getElementById('hint');
+            hintElement.innerText = questions[currentQuestionIndex].hint;
+            hintElement.style.display = "block";
+            setTimeout(() => {
+                hintElement.style.opacity = "1";
+            }, 100);
+        }
+
+        function nextStep() {
+            let nextStepElement = document.getElementById('nextStep');
+            nextStepElement.style.display = "none";  // Hide the next step options
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                startQuiz();
+            } else {
+                alert("Congratulations! You have survived the Squid Game Challenge.");
+            }
+        }
+
+        window.onload = startQuiz;
+    </script>
+</body>
+</html>
