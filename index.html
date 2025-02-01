@@ -295,8 +295,9 @@
       <div class="row container">
         <div class="contact-box">
           <h2>Find the group number</h2>
-          <input type="email" placeholder="Enter Your E Number(E/22/XXX)" />
-          <a class="button" href="game_web_page/index5.html">Get Started</a>
+          <input type="email" id="eNumberInput" placeholder="Enter Your E Number(E/22/XXX)" />
+          <p id="errorMessage" style="color: red; font-weight: bold; display: none;">Invalid E Number</p>
+          <a class="button" href="#">Get Started</a>
           <div class="contact-shape">
             <img
               class="cShape-one"
@@ -356,13 +357,15 @@
       </div>
       <div class="copy-right">
         <div class="container">
-          <p>Copyright&#169;2024 Alejandro</p>
+          <p>Copyright&#169;2024</p>
         </div>
       </div>
     </footer>
 
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script src="./js/main.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script src="login.js"></script>
   </body>
 </html>

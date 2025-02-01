@@ -16,13 +16,21 @@
             margin-top: 5%;
             position: relative;
         }
-        .question-box {
+        /* .question-box {
+            border: 3px solid red;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+        } */
+        .box {
             border: 3px solid red;
             display: inline-block;
             padding: 20px;
             border-radius: 10px;
             background: rgba(0, 0, 0, 0.8);
         }
+
         .hint {
             color: yellow;
             font-style: italic;
@@ -101,7 +109,7 @@
         <h1>Squid Game Challenge</h1>
         <p class="subtitle">Survive the Game by Answering Correctly!</p>
         <img src="doll.png" class="bot-guide" alt="Squid Game Guide Bot">
-        <div class="question-box">
+        <div id="question-box" class="box">
             <p id="question"></p>
             <p id="timer"></p>
             <input type="text" id="answer" placeholder=">">
@@ -115,89 +123,16 @@
                 <button class="squid-symbol-btn square-btn" onclick="nextStep()">Square</button>
             </div>
         </div>
+
+         <!-- Group Display Box (Initially Hidden) -->
+        <div id="groupBox" class="box" style="display: none;">
+            <h2>Congratulations!</h2>
+            <p id="groupMessage"></p>
+        </div>
+
+
     </div>
-    <script>
-        let questions = [
-            { question: "What is the number of the protagonist in Squid Game?", answer: "456", hint: "Hint: The last contestant!" },
-            { question: "What shape represents the workers in Squid Game?", answer: "Circle", hint: "Hint: The simplest geometric figure!" },
-            { question: "What color do the players wear?", answer: "Green", hint: "Hint: The color of life and survival!" }
-        ];
-        let currentQuestionIndex = 0;
-        let timeLeft = 15;
-        let timerInterval;
-
-        function startQuiz() {
-            let questionElement = document.getElementById('question');
-            questionElement.innerText = "";
-            let text = questions[currentQuestionIndex].question;
-            let i = 0;
-            function typeEffect() {
-                if (i < text.length) {
-                    questionElement.innerText += text.charAt(i);
-                    i++;
-                    setTimeout(typeEffect, 50);
-                }
-            }
-            typeEffect();
-            startTimer();
-        }
-
-        function startTimer() {
-            timeLeft = 15;
-            document.getElementById('timer').innerText = `Time left: ${timeLeft}s`;
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer').innerText = `Time left: ${timeLeft}s`;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert("Time's up! Try again.");
-                    startQuiz();
-                }
-            }, 1000);
-        }
-
-        function checkAnswer() {
-            let userAnswer = document.getElementById('answer').value.trim();
-            let hintElement = document.getElementById('hint');
-            let nextStepElement = document.getElementById('nextStep');
-            
-            if (userAnswer.toLowerCase() === questions[currentQuestionIndex].answer.toLowerCase()) {
-                let audio = new Audio('success.mp3');
-                audio.play();
-                alert("Correct! Moving to the next challenge.");
-                nextStepElement.style.display = "block";  // Show the next step buttons
-                document.getElementById('answer').value = "";
-                hintElement.style.opacity = "0";
-                hintElement.style.display = "none";
-            } else {
-                let audio = new Audio('error.mp3');
-                audio.play();
-                showHint();
-            }
-        }
-
-        function showHint() {
-            let hintElement = document.getElementById('hint');
-            hintElement.innerText = questions[currentQuestionIndex].hint;
-            hintElement.style.display = "block";
-            setTimeout(() => {
-                hintElement.style.opacity = "1";
-            }, 100);
-        }
-
-        function nextStep() {
-            let nextStepElement = document.getElementById('nextStep');
-            nextStepElement.style.display = "none";  // Hide the next step options
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                startQuiz();
-            } else {
-                alert("Congratulations! You have survived the Squid Game Challenge.");
-            }
-        }
-
-        window.onload = startQuiz;
-    </script>
+    <script src="problem.js"></script>
+    <script src="js/login.js"></script>
 </body>
 </html>
